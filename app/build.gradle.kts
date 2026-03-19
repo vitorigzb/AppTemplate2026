@@ -54,6 +54,7 @@ dependencies {
     implementation(libs.firebase.common.ktx)
     implementation(libs.firebase.database.ktx)
     implementation(platform(libs.firebase.bom))
+    implementation(libs.firebase.bom.v34100)
     implementation(libs.firebase.auth)
     implementation(libs.glide)
     implementation(libs.firebase.storage.ktx)
@@ -62,6 +63,7 @@ dependencies {
     implementation(libs.firebase.crashlytics.buildtools)
     implementation(libs.jetbrains.kotlinx.coroutines.core)
     implementation(libs.kotlinx.coroutines.android)
+    implementation(libs.google.firebase.analytics)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
