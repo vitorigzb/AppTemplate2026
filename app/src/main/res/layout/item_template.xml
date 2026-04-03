@@ -1,45 +1,85 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:padding="8dp">
 
-    <LinearLayout
-        android:orientation="horizontal"
+    <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="8dp">
-
-        <ImageView
-            android:id="@+id/item_image"
-            android:layout_width="100dp"
-            android:layout_height="100dp"
-            android:scaleType="centerCrop"
-            android:layout_marginEnd="8dp" />
+        android:radius="16dp"
+        android:elevation="4dp"
+        android:padding="12dp">
 
         <LinearLayout
-            android:orientation="vertical"
-            android:layout_width="0dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="1">
+            android:orientation="horizontal"
+            android:padding="12dp">
 
+            <!-- Emoji / Ícone -->
             <TextView
-                android:id="@+id/item_endereco"
+                android:id="@+id/item_emoji"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Endereço:"
-                android:textSize="16sp"
-                android:textStyle="bold" />
+                android:text="😊"
+                android:textSize="32sp"
+                android:layout_marginEnd="12dp"/>
 
-            <!-- Campos futuros aqui -->
+            <!-- Conteúdo -->
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <!-- Categoria -->
+                <TextView
+                    android:id="@+id/item_categoria"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="GOOD"
+                    android:textStyle="bold"
+                    android:textSize="16sp"
+                    android:textColor="#4CAF50"/>
+
+                <!-- Data -->
+                <TextView
+                    android:id="@+id/item_data"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="22 May"
+                    android:textSize="12sp"
+                    android:textColor="#888888"
+                    android:layout_marginBottom="4dp"/>
+
+                <!-- Descrição -->
+                <TextView
+                    android:id="@+id/item_descricao"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Me senti bem hoje :)"
+                    android:textSize="14sp"/>
+
+                <!-- Intensidade -->
+                <TextView
+                    android:id="@+id/item_intensidade"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Intensidade: 8"
+                    android:textSize="12sp"
+                    android:textColor="#666666"
+                    android:layout_marginTop="4dp"/>
+
+                <ImageView
+                    android:id="@+id/item_image"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_marginEnd="8dp"
+                    android:scaleType="centerCrop"/>
+            </LinearLayout>
+
         </LinearLayout>
-    </LinearLayout>
+    </androidx.cardview.widget.CardView>
 
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="#CCCCCC"
-        android:layout_marginTop="8dp"
-        android:layout_marginBottom="8dp"/>
 </LinearLayout>

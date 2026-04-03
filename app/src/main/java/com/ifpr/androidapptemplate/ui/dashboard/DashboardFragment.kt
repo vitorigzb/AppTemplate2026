@@ -8,10 +8,6 @@ import android.util.Base64
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
-import android.widget.EditText
-import android.widget.ImageView
-import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
@@ -19,73 +15,88 @@ import com.bumptech.glide.Glide
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
-import com.google.firebase.storage.StorageReference
-import com.ifpr.androidapptemplate.R
 import com.ifpr.androidapptemplate.baseclasses.Item
 import com.ifpr.androidapptemplate.databinding.FragmentDashboardBinding
-
 
 class DashboardFragment : Fragment() {
 
     private var _binding: FragmentDashboardBinding? = null
+    private val binding get() = _binding!!
 
-    private lateinit var enderecoEditText: EditText
-    private lateinit var itemImageView: ImageView
     private var imageUri: Uri? = null
+    private var emojiSelecionado: String = "😐"
 
-
-    //TODO("Declare aqui as outras variaveis do tipo EditText que foram inseridas no layout")
-    private lateinit var salvarButton: Button
-    private lateinit var selectImageButton: Button
     private lateinit var databaseReference: DatabaseReference
-    private lateinit var storageReference: StorageReference
     private lateinit var auth: FirebaseAuth
 
     companion object {
         private const val PICK_IMAGE_REQUEST = 1
     }
 
-    // This property is only valid between onCreateView and
-    // onDestroyView.
-    private val binding get() = _binding!!
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View {
-        val dashboardViewModel = ViewModelProvider(this).get(DashboardViewModel::class.java)
+        fun resetarEmojis() {
+            binding.emojiTriste.alpha = 0.5f
+            binding.emojiNeutro.alpha = 0.5f
+            binding.emojiFeliz.alpha = 0.5f
+            binding.emojiAmor.alpha = 0.5f
+            binding.emojiRaiva.alpha = 0.5f
+        }
+
+        val dashboardViewModel = ViewModelProvider(this)[DashboardViewModel::class.java]
 
         _binding = FragmentDashboardBinding.inflate(inflater, container, false)
         val root: View = binding.root
 
-        val textView: TextView = binding.textDashboard
         dashboardViewModel.text.observe(viewLifecycleOwner) {
-            textView.text = it
+            binding.textDashboard.text = it
         }
-
-        val view = inflater.inflate(R.layout.fragment_dashboard, container, false)
-        itemImageView = view.findViewById(R.id.image_item)
-        salvarButton = view.findViewById(R.id.salvarItemButton)
-        selectImageButton = view.findViewById(R.id.button_select_image)
-        enderecoEditText = view.findViewById(R.id.enderecoItemEditText)
-        //TODO("Capture aqui os outro campos que foram inseridos no layout. Por exemplo, ate
-        // o momento so foi capturado o endereco (EditText)")
 
         auth = FirebaseAuth.getInstance()
 
-        selectImageButton.setOnClickListener {
+        // botão imagem
+        binding.buttonSelectImage.setOnClickListener {
             openFileChooser()
         }
 
-        salvarButton.setOnClickListener {
+        // botão salvar
+        binding.salvarItemButton.setOnClickListener {
             salvarItem()
         }
 
-        return view
-    }
+        // emojis
+        binding.emojiTriste.setOnClickListener {
+            resetarEmojis()
+            binding.emojiTriste.alpha = 1f
+            emojiSelecionado = "😢"
+        }
 
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
+        binding.emojiNeutro.setOnClickListener {
+            resetarEmojis()
+            binding.emojiNeutro.alpha = 1f
+            emojiSelecionado = "😐"
+        }
+
+        binding.emojiFeliz.setOnClickListener {
+            resetarEmojis()
+            binding.emojiFeliz.alpha = 1f
+            emojiSelecionado = "😊"
+        }
+
+        binding.emojiAmor.setOnClickListener {
+            resetarEmojis()
+            binding.emojiAmor.alpha = 1f
+            emojiSelecionado = "😍"
+        }
+
+        binding.emojiRaiva.setOnClickListener {
+            resetarEmojis()
+            binding.emojiRaiva.alpha = 1f
+            emojiSelecionado = "😡"
+        }
+
+        return root
     }
 
     private fun openFileChooser() {
@@ -96,66 +107,76 @@ class DashboardFragment : Fragment() {
     }
 
     private fun salvarItem() {
-        //TODO("Capture aqui o conteudo que esta nos outros editTexts que foram criados")
-        val endereco = enderecoEditText.text.toString().trim()
+        val descricao = binding.descricaoEditText.text.toString().trim()
+        val categoria = binding.categoriaEditText.text.toString().trim()
+        val intensidadeTexto = binding.intensidadeEditText.text.toString()
+        val data = binding.dataEditText.text.toString().trim()
 
-        if (endereco.isEmpty() || imageUri == null) {
-            Toast.makeText(context, "Por favor, preencha todos os campos", Toast.LENGTH_SHORT)
-                .show()
+        val intensidade = intensidadeTexto.toIntOrNull() ?: 0
+
+        if (descricao.isEmpty() || categoria.isEmpty() || data.isEmpty() || imageUri == null) {
+            Toast.makeText(context, "Preencha tudo!", Toast.LENGTH_SHORT).show()
             return
         }
-        uploadImageToFirestore()
+
+        uploadImage(descricao, categoria, intensidade, data)
     }
 
+    private fun uploadImage(
+        descricao: String,
+        categoria: String,
+        intensidade: Int,
+        data: String
+    ) {
+        val inputStream = context?.contentResolver?.openInputStream(imageUri!!)
+        val bytes = inputStream?.readBytes()
+        inputStream?.close()
 
-    private fun uploadImageToFirestore() {
-        if (imageUri != null) {
-            val inputStream = context?.contentResolver?.openInputStream(imageUri!!)
-            val bytes = inputStream?.readBytes()
-            inputStream?.close()
+        if (bytes != null) {
+            val base64Image = Base64.encodeToString(bytes, Base64.DEFAULT)
 
-            if (bytes != null) {
-                val base64Image = Base64.encodeToString(bytes, Base64.DEFAULT)
-                val endereco = enderecoEditText.text.toString().trim()
-                //TODO("Capture aqui o conteudo que esta nos outros editTexts que foram criados")
+            val item = Item(
+                descricao,
+                categoria,
+                intensidade,
+                data,
+                base64Image,
+                emojiSelecionado
+            )
 
-                val item = Item(endereco, base64Image)
-
-                saveItemIntoDatabase(item)
-            }
+            saveItem(item)
         }
     }
-
-
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
+
         if (requestCode == PICK_IMAGE_REQUEST && resultCode == Activity.RESULT_OK
             && data != null && data.data != null
         ) {
             imageUri = data.data
-            Glide.with(this).load(imageUri).into(itemImageView)
+            Glide.with(this).load(imageUri).into(binding.imageItem)
         }
     }
 
-    private fun saveItemIntoDatabase(item: Item) {
-        //TODO("Altere a raiz que sera criada no seu banco de dados do realtime database.
-        // Renomeie a raiz itens")
+    private fun saveItem(item: Item) {
         databaseReference = FirebaseDatabase.getInstance().getReference("itens")
 
-        // Cria uma chave unica para o novo item
         val itemId = databaseReference.push().key
+
         if (itemId != null) {
             databaseReference.child(auth.uid.toString()).child(itemId).setValue(item)
                 .addOnSuccessListener {
-                    Toast.makeText(context, "Item cadastrado com sucesso!", Toast.LENGTH_SHORT)
-                        .show()
-                    requireActivity().supportFragmentManager.popBackStack()
-                }.addOnFailureListener {
-                    Toast.makeText(context, "Falha ao cadastrar o item", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(context, "Salvo!", Toast.LENGTH_SHORT).show()
                 }
-        } else {
-            Toast.makeText(context, "Erro ao gerar o ID do item", Toast.LENGTH_SHORT).show()
+                .addOnFailureListener {
+                    Toast.makeText(context, "Erro!", Toast.LENGTH_SHORT).show()
+                }
         }
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 }
