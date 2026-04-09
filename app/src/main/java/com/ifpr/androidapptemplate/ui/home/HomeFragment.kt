@@ -191,21 +191,29 @@ class HomeFragment : Fragment() {
                         val itemView = LayoutInflater.from(container.context)
                             .inflate(R.layout.item_template, container, false)
 
+                        val emojiView = itemView.findViewById<TextView>(R.id.item_emoji)
+                        val categoriaView = itemView.findViewById<TextView>(R.id.item_categoria)
+                        val dataView = itemView.findViewById<TextView>(R.id.item_data)
+                        val descricaoView = itemView.findViewById<TextView>(R.id.item_descricao)
+                        val intensidadeView = itemView.findViewById<TextView>(R.id.item_intensidade)
                         val imageView = itemView.findViewById<ImageView>(R.id.item_image)
-                        val enderecoView = itemView.findViewById<TextView>(R.id.item_endereco)
 
-                        enderecoView.text = "Endereço: ${item.endereco ?: "Não informado"}"
+                        val intensidade = item.intensidade ?: 0
 
-                        if (!item.imageUrl.isNullOrEmpty()) {
-                            Glide.with(container.context).load(item.imageUrl).into(imageView)
-                        } else if (!item.base64Image.isNullOrEmpty()) {
+                        emojiView.text = item.emoji ?: "😐"
+
+                        categoriaView.text = item.categoria?.uppercase() ?: "SEM CATEGORIA"
+                        dataView.text = item.data ?: ""
+                        descricaoView.text = item.descricao ?: ""
+                        intensidadeView.text = "Intensidade: $intensidade"
+
+                        if (!item.foto.isNullOrEmpty()) {
                             try {
-                                val bytes = Base64.decode(item.base64Image, Base64.DEFAULT)
+                                val bytes = Base64.decode(item.foto, Base64.DEFAULT)
                                 val bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.size)
                                 imageView.setImageBitmap(bitmap)
                             } catch (_: Exception) {}
                         }
-
                         container.addView(itemView)
                     }
                 }
