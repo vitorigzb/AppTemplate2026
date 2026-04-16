@@ -158,6 +158,28 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"/>
 
+    <EditText
+        android:id="@+id/localizacaoEditText"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:hint="Localização (ou use GPS)"
+        android:background="@drawable/edittext_bg"
+        android:padding="12dp"
+        android:layout_margin="8dp"
+        app:layout_constraintTop_toBottomOf="@id/dataEditText"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
+
+    <Button
+        android:id="@+id/btnUsarLocalizacao"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="📍 Usar minha localização"
+        android:layout_marginTop="4dp"
+        app:layout_constraintTop_toBottomOf="@id/localizacaoEditText"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
+
 
     <Button
         android:id="@+id/salvarItemButton"
@@ -167,7 +189,7 @@
         android:background="@drawable/card_background"
         android:padding="12dp"
         android:layout_margin="8dp"
-        app:layout_constraintTop_toBottomOf="@id/dataEditText"
+        app:layout_constraintTop_toBottomOf="@id/btnUsarLocalizacao"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"/>
 

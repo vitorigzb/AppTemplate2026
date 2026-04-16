@@ -17,8 +17,23 @@ import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
 import com.ifpr.androidapptemplate.baseclasses.Item
 import com.ifpr.androidapptemplate.databinding.FragmentDashboardBinding
+import android.Manifest
+import android.content.pm.PackageManager
+import androidx.core.app.ActivityCompat
+import android.location.Location
+import android.location.Geocoder
+import com.google.android.gms.location.FusedLocationProviderClient
+import com.google.android.gms.location.LocationServices
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import java.util.Locale
 
 class DashboardFragment : Fragment() {
+
+    private lateinit var fusedLocationClient: FusedLocationProviderClient
+
 
     private var _binding: FragmentDashboardBinding? = null
     private val binding get() = _binding!!
@@ -96,6 +111,12 @@ class DashboardFragment : Fragment() {
             emojiSelecionado = "😡"
         }
 
+        fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireActivity())
+
+        binding.btnUsarLocalizacao.setOnClickListener {
+            pegarLocalizacaoAtual()
+        }
+
         return root
     }
 
@@ -111,6 +132,9 @@ class DashboardFragment : Fragment() {
         val categoria = binding.categoriaEditText.text.toString().trim()
         val intensidadeTexto = binding.intensidadeEditText.text.toString()
         val data = binding.dataEditText.text.toString().trim()
+        val localizacao = binding.localizacaoEditText.text.toString().trim()
+
+
 
         val intensidade = intensidadeTexto.toIntOrNull() ?: 0
 
@@ -119,14 +143,15 @@ class DashboardFragment : Fragment() {
             return
         }
 
-        uploadImage(descricao, categoria, intensidade, data)
+        uploadImage(descricao, categoria, intensidade, data, localizacao)
     }
 
     private fun uploadImage(
         descricao: String,
         categoria: String,
         intensidade: Int,
-        data: String
+        data: String,
+        localizacao: String
     ) {
         val inputStream = context?.contentResolver?.openInputStream(imageUri!!)
         val bytes = inputStream?.readBytes()
@@ -136,12 +161,13 @@ class DashboardFragment : Fragment() {
             val base64Image = Base64.encodeToString(bytes, Base64.DEFAULT)
 
             val item = Item(
-                descricao,
-                categoria,
-                intensidade,
-                data,
-                base64Image,
-                emojiSelecionado
+                descricao = descricao,
+                categoria = categoria,
+                intensidade = intensidade,
+                data = data,
+                foto = base64Image,
+                emoji = emojiSelecionado,
+                localizacao = localizacao
             )
 
             saveItem(item)
@@ -172,6 +198,47 @@ class DashboardFragment : Fragment() {
                 .addOnFailureListener {
                     Toast.makeText(context, "Erro!", Toast.LENGTH_SHORT).show()
                 }
+        }
+    }
+
+    private fun pegarLocalizacaoAtual() {
+
+        if (ActivityCompat.checkSelfPermission(
+                requireContext(),
+                Manifest.permission.ACCESS_FINE_LOCATION
+            ) != PackageManager.PERMISSION_GRANTED
+        ) {
+            requestPermissions(arrayOf(Manifest.permission.ACCESS_FINE_LOCATION), 1)
+            return
+        }
+
+        fusedLocationClient.lastLocation.addOnSuccessListener { location ->
+            if (location != null) {
+                converterEndereco(location)
+            } else {
+                Toast.makeText(context, "Não foi possível obter localização", Toast.LENGTH_SHORT).show()
+            }
+        }
+    }
+
+    private fun converterEndereco(location: Location) {
+        CoroutineScope(Dispatchers.IO).launch {
+            try {
+                val geocoder = Geocoder(requireContext(), Locale.getDefault())
+                val addresses = geocoder.getFromLocation(location.latitude, location.longitude, 1)
+
+                val endereco = addresses?.firstOrNull()?.getAddressLine(0)
+                    ?: "Localização não encontrada"
+
+                withContext(Dispatchers.Main) {
+                    binding.localizacaoEditText.setText(endereco)
+                }
+
+            } catch (e: Exception) {
+                withContext(Dispatchers.Main) {
+                    Toast.makeText(context, "Erro ao pegar localização", Toast.LENGTH_SHORT).show()
+                }
+            }
         }
     }
 
