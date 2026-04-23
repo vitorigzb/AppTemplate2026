@@ -192,29 +192,42 @@ class HomeFragment : Fragment() {
         val databaseRef = FirebaseDatabase.getInstance().getReference("itens")
 
         databaseRef.addListenerForSingleValueEvent(object : ValueEventListener {
+
             override fun onDataChange(snapshot: DataSnapshot) {
                 container.removeAllViews()
 
                 for (userSnapshot in snapshot.children) {
                     for (itemSnapshot in userSnapshot.children) {
+
                         val item = itemSnapshot.getValue(Item::class.java) ?: continue
 
                         val itemView = LayoutInflater.from(container.context)
                             .inflate(R.layout.item_template, container, false)
 
+                        val emojiView = itemView.findViewById<TextView>(R.id.item_emoji)
+                        val categoriaView = itemView.findViewById<TextView>(R.id.item_categoria)
+                        val dataView = itemView.findViewById<TextView>(R.id.item_data)
+                        val descricaoView = itemView.findViewById<TextView>(R.id.item_descricao)
+                        val intensidadeView = itemView.findViewById<TextView>(R.id.item_intensidade)
                         val imageView = itemView.findViewById<ImageView>(R.id.item_image)
-                        val enderecoView = itemView.findViewById<TextView>(R.id.item_endereco)
+                        val localizacaoView = itemView.findViewById<TextView>(R.id.item_localizacao)
 
-                        enderecoView.text = "Endereço: ${item.endereco ?: "Não informado"}"
+                        val intensidade = item.intensidade ?: 0
 
-                        if (!item.imageUrl.isNullOrEmpty()) {
-                            Glide.with(container.context).load(item.imageUrl).into(imageView)
-                        } else if (!item.base64Image.isNullOrEmpty()) {
+                        emojiView.text = item.emoji ?: "😐"
+                        categoriaView.text = item.categoria?.uppercase() ?: "SEM CATEGORIA"
+                        dataView.text = item.data ?: ""
+                        descricaoView.text = item.descricao ?: ""
+                        intensidadeView.text = "Intensidade: $intensidade"
+                        localizacaoView.text = item.localizacao ?: "Sem localização"
+
+                        if (!item.foto.isNullOrEmpty()) {
                             try {
-                                val bytes = Base64.decode(item.base64Image, Base64.DEFAULT)
+                                val bytes = Base64.decode(item.foto, Base64.DEFAULT)
                                 val bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.size)
                                 imageView.setImageBitmap(bitmap)
-                            } catch (_: Exception) {}
+                            } catch (_: Exception) {
+                            }
                         }
 
                         container.addView(itemView)
@@ -223,7 +236,8 @@ class HomeFragment : Fragment() {
             }
 
             override fun onCancelled(error: DatabaseError) {
-                Toast.makeText(container.context, "Erro ao carregar dados", Toast.LENGTH_SHORT).show()
+                Toast.makeText(container.context, "Erro ao carregar dados", Toast.LENGTH_SHORT)
+                    .show()
             }
         })
     }
