@@ -230,6 +230,20 @@ class HomeFragment : Fragment() {
                             }
                         }
 
+                        // =========================================================
+                        // PASSO 5 – CAPTURAR O CLIQUE NO ITEM DA LISTA
+                        // =========================================================
+                        itemView.setOnClickListener { view ->
+                            val context = view.context
+                            val intent = Intent(context, com.ifpr.androidapptemplate.DetalhesItemActivity::class.java)
+
+                            // MODIFIQUE ESSA LINHA: Em vez de item.id, use itemSnapshot.key
+                            intent.putExtra("ITEM_ID", itemSnapshot.key)
+
+                            context.startActivity(intent)
+                        }
+                        // =========================================================
+
                         container.addView(itemView)
                     }
                 }

@@ -5,6 +5,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:overScrollMode="ifContentScrolls"
+    android:scrollbarStyle="insideInset"
+    android:scrollbars="vertical"
     tools:context=".ui.dashboard.DashboardFragment">
 
 
@@ -12,7 +15,6 @@
         android:id="@+id/text_dashboard"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="32dp"
         android:textAlignment="center"
         android:textSize="20sp"
         android:text="Cadastro de emoções"
@@ -195,3 +197,4 @@
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
+
