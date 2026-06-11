@@ -1,200 +1,235 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:tools="http://tools.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:overScrollMode="ifContentScrolls"
-    android:scrollbarStyle="insideInset"
-    android:scrollbars="vertical"
+    android:fillViewport="true"
+    android:background="#F8F9FA"
     tools:context=".ui.dashboard.DashboardFragment">
 
-
-    <TextView
-        android:id="@+id/text_dashboard"
-        android:layout_width="wrap_content"
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textAlignment="center"
-        android:textSize="20sp"
-        android:text="Cadastro de emoções"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <TextView
-        android:id="@+id/textEmoji"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Escolha seu humor:"
-        android:textStyle="bold"
-        android:layout_marginTop="16dp"
-        app:layout_constraintTop_toBottomOf="@id/text_dashboard"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"/>
-
-    <LinearLayout
-        android:id="@+id/emojiContainer"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_marginTop="8dp"
-        app:layout_constraintTop_toBottomOf="@id/textEmoji"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent">
+        android:padding="24dp">
 
         <TextView
-            android:id="@+id/emoji_triste"
+            android:id="@+id/text_dashboard"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="😢"
-            android:textSize="28sp"
-            android:padding="8dp"/>
+            android:text="Cadastro de Emoções"
+            android:textSize="24sp"
+            android:textStyle="bold"
+            android:textColor="#212529"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
-            android:id="@+id/emoji_neutro"
+            android:id="@+id/textEmoji"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="😐"
-            android:textSize="28sp"
-            android:padding="8dp"/>
+            android:layout_marginTop="16dp"
+            android:text="Escolha seu humor:"
+            android:textColor="#6C757D"
+            android:textSize="15sp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/text_dashboard" />
 
-        <TextView
-            android:id="@+id/emoji_feliz"
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:id="@+id/emojiContainer"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:text="😊"
-            android:textSize="28sp"
-            android:padding="8dp"/>
+            android:layout_marginTop="12dp"
+            android:background="#FFFFFF"
+            android:elevation="2dp"
+            android:gravity="center"
+            android:orientation="horizontal"
+            android:padding="12dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/textEmoji">
 
-        <TextView
-            android:id="@+id/emoji_amor"
+            <TextView
+                android:id="@+id/emojiTriste"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:clickable="true"
+                android:focusable="true"
+                android:gravity="center"
+                android:text="😢"
+                android:textSize="32sp" />
+
+            <TextView
+                android:id="@+id/emojiNeutro"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:clickable="true"
+                android:focusable="true"
+                android:gravity="center"
+                android:text="😐"
+                android:textSize="32sp" />
+
+            <TextView
+                android:id="@+id/emojiFeliz"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:clickable="true"
+                android:focusable="true"
+                android:gravity="center"
+                android:text="😊"
+                android:textSize="32sp" />
+
+            <TextView
+                android:id="@+id/emojiAmor"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:clickable="true"
+                android:focusable="true"
+                android:gravity="center"
+                android:text="😍"
+                android:textSize="32sp" />
+
+            <TextView
+                android:id="@+id/emojiRaiva"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:clickable="true"
+                android:focusable="true"
+                android:gravity="center"
+                android:text="😡"
+                android:textSize="32sp" />
+        </LinearLayout>
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/card_image"
+            android:layout_width="0dp"
+            android:layout_height="160dp"
+            android:layout_marginTop="20dp"
+            app:cardCornerRadius="12dp"
+            app:cardElevation="2dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/emojiContainer">
+
+            <ImageView
+                android:id="@+id/image_item"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="#E9ECEF"
+                android:contentDescription="Store Photo"
+                android:scaleType="centerCrop"
+                tools:src="@android:drawable/gallery_thumb" />
+        </androidx.cardview.widget.CardView>
+
+        <Button
+            android:id="@+id/button_select_image"
+            android:layout_width="0dp"
+            android:layout_height="52dp"
+            android:layout_marginTop="12dp"
+            android:text="Selecionar Imagem"
+            android:textAllCaps="false"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/card_image" />
+
+        <EditText
+            android:id="@+id/descricaoEditText"
+            android:layout_width="0dp"
+            android:layout_height="56dp"
+            android:layout_marginTop="20dp"
+            android:background="@android:drawable/edit_text"
+            android:hint="Como você está se sentindo hoje?"
+            android:paddingHorizontal="16dp"
+            android:textColor="#212529"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/button_select_image" />
+
+        <EditText
+            android:id="@+id/categoriaEditText"
+            android:layout_width="0dp"
+            android:layout_height="56dp"
+            android:layout_marginTop="12dp"
+            android:background="@android:drawable/edit_text"
+            android:hint="Categoria (ex: ansiedade, felicidade)"
+            android:paddingHorizontal="16dp"
+            android:textColor="#212529"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/descricaoEditText" />
+
+        <EditText
+            android:id="@+id/intensidadeEditText"
+            android:layout_width="0dp"
+            android:layout_height="56dp"
+            android:layout_marginTop="12dp"
+            android:background="@android:drawable/edit_text"
+            android:hint="Intensidade (0 a 10)"
+            android:inputType="number"
+            android:paddingHorizontal="16dp"
+            android:textColor="#212529"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/categoriaEditText" />
+
+        <EditText
+            android:id="@+id/dataEditText"
+            android:layout_width="0dp"
+            android:layout_height="56dp"
+            android:layout_marginTop="12dp"
+            android:background="@android:drawable/edit_text"
+            android:hint="Data"
+            android:paddingHorizontal="16dp"
+            android:textColor="#212529"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/intensidadeEditText" />
+
+        <EditText
+            android:id="@+id/localizacaoEditText"
+            android:layout_width="0dp"
+            android:layout_height="56dp"
+            android:layout_marginTop="12dp"
+            android:layout_marginEnd="8dp"
+            android:background="@android:drawable/edit_text"
+            android:hint="Localização (ou use GPS)"
+            android:paddingHorizontal="16dp"
+            android:textColor="#212529"
+            app:layout_constraintEnd_toStartOf="@id/btnUsarLocalizacao"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/dataEditText" />
+
+        <Button
+            android:id="@+id/btnUsarLocalizacao"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="😍"
-            android:textSize="28sp"
-            android:padding="8dp"/>
+            android:layout_height="56dp"
+            android:text="GPS 📍"
+            android:textAllCaps="false"
+            app:layout_constraintBottom_toBottomOf="@id/localizacaoEditText"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@id/localizacaoEditText" />
 
-        <TextView
-            android:id="@+id/emoji_raiva"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="😡"
-            android:textSize="28sp"
-            android:padding="8dp"/>
-    </LinearLayout>
+        <Button
+            android:id="@+id/salvarItemButton"
+            android:layout_width="0dp"
+            android:layout_height="56dp"
+            android:layout_marginTop="28dp"
+            android:layout_marginBottom="16dp"
+            android:text="Salvar Registro"
+            android:textAllCaps="false"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/localizacaoEditText" />
 
-    <ImageView
-        android:id="@+id/image_item"
-        android:layout_width="100dp"
-        android:layout_height="100dp"
-        android:layout_marginTop="16dp"
-        android:layout_marginBottom="32dp"
-        android:contentDescription="Store Photo"
-        android:scaleType="centerCrop"
-        android:src="@android:drawable/gallery_thumb"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/emojiContainer"/>
-
-    <Button
-        android:id="@+id/button_select_image"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:text="Selecionar Imagem"
-        android:background="@drawable/edittext_bg"
-        android:padding="12dp"
-        android:layout_margin="8dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/image_item" />
-
-
-    <EditText
-        android:id="@+id/descricaoEditText"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:hint="Como você está se sentindo hoje?"
-        android:background="@drawable/edittext_bg"
-        android:padding="12dp"
-        android:layout_margin="8dp"
-        app:layout_constraintTop_toBottomOf="@id/button_select_image"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"/>
-
-    <EditText
-        android:id="@+id/categoriaEditText"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:hint="Categoria (ex: ansiedade, felicidade)"
-        android:background="@drawable/edittext_bg"
-        android:padding="12dp"
-        android:layout_margin="8dp"
-        app:layout_constraintTop_toBottomOf="@id/descricaoEditText"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"/>
-
-    <EditText
-        android:id="@+id/intensidadeEditText"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:hint="Intensidade (0 a 10)"
-        android:inputType="number"
-        android:background="@drawable/edittext_bg"
-        android:padding="12dp"
-        android:layout_margin="8dp"
-        app:layout_constraintTop_toBottomOf="@id/categoriaEditText"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"/>
-
-    <EditText
-        android:id="@+id/dataEditText"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:hint="Data"
-        android:background="@drawable/edittext_bg"
-        android:padding="12dp"
-        android:layout_margin="8dp"
-        app:layout_constraintTop_toBottomOf="@id/intensidadeEditText"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"/>
-
-    <EditText
-        android:id="@+id/localizacaoEditText"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:hint="Localização (ou use GPS)"
-        android:background="@drawable/edittext_bg"
-        android:padding="12dp"
-        android:layout_margin="8dp"
-        app:layout_constraintTop_toBottomOf="@id/dataEditText"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"/>
-
-    <Button
-        android:id="@+id/btnUsarLocalizacao"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="📍 Usar minha localização"
-        android:layout_marginTop="4dp"
-        app:layout_constraintTop_toBottomOf="@id/localizacaoEditText"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"/>
-
-
-    <Button
-        android:id="@+id/salvarItemButton"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:text="Salvar"
-        android:background="@drawable/card_background"
-        android:padding="12dp"
-        android:layout_margin="8dp"
-        app:layout_constraintTop_toBottomOf="@id/btnUsarLocalizacao"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"/>
-
-
-</androidx.constraintlayout.widget.ConstraintLayout>
-
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</ScrollView>

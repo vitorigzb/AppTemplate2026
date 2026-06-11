@@ -1,15 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.cardview.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/cardItem"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_margin="10dp"
-    android:elevation="8dp"
-    android:radius="24dp"
-    android:background="@drawable/card_background"
-    android:backgroundTint="#F7F7FB"
+    android:layout_marginHorizontal="16dp"
+    android:layout_marginVertical="8dp"
     android:clickable="true"
-    android:focusable="true">
+    android:focusable="true"
+    android:foreground="?android:attr/selectableItemBackground"
+    app:cardCornerRadius="16dp"
+    app:cardElevation="3dp"
+    app:cardBackgroundColor="#FFFFFF">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -17,92 +20,96 @@
         android:orientation="vertical"
         android:padding="16dp">
 
-        <!-- TOPO -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:gravity="center_vertical"
             android:orientation="horizontal">
 
-            <!-- Emoji -->
             <TextView
                 android:id="@+id/item_emoji"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:text="😊"
-                android:textSize="36sp"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
+                android:textSize="38sp" />
 
-            <!-- Categoria + Data -->
             <LinearLayout
-                android:layout_marginStart="12dp"
-                android:orientation="vertical"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content">
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_weight="1"
+                android:orientation="vertical">
 
                 <TextView
                     android:id="@+id/item_categoria"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="FELIZ"
-                    android:textStyle="bold"
-                    android:textSize="18sp"
-                    android:textColor="@color/vitoria"/>
+                    android:textColor="@color/vitoria"
+                    android:textSize="16sp"
+                    android:textStyle="bold" />
 
                 <TextView
                     android:id="@+id/item_data"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="2dp"
                     android:text="22 May"
-                    android:textSize="12sp"
-                    android:textColor="@color/black"/>
+                    android:textColor="#6C757D"
+                    android:textSize="12sp" />
             </LinearLayout>
 
         </LinearLayout>
 
-        <!-- DESCRIÇÃO -->
         <TextView
             android:id="@+id/item_descricao"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="12dp"
+            android:layout_marginTop="14dp"
             android:text="Hoje foi um dia incrível :)"
-            android:textSize="15sp"
-            android:textColor="#444"/>
+            android:textColor="#212529"
+            android:textSize="15sp" />
 
         <TextView
             android:id="@+id/item_localizacao"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Localização"
-            android:textSize="12sp"
-            android:textColor="#888"
-            android:layout_marginTop="4dp"/>
-
-        <!-- IMAGEM -->
-        <ImageView
-            android:id="@+id/item_image"
             android:layout_width="match_parent"
-            android:layout_height="180dp"
-            android:layout_marginTop="12dp"
-            android:scaleType="centerCrop"
-            android:background="@drawable/bg_image_rounded"/>
+            android:layout_height="wrap_content"
+            android:layout_marginTop="6dp"
+            android:text="📍 Localização"
+            android:textColor="#6C757D"
+            android:textSize="13sp" />
 
-        <!-- DIVISOR -->
+        <androidx.cardview.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="160dp"
+            android:layout_marginTop="14dp"
+            app:cardCornerRadius="12dp"
+            app:cardElevation="0dp"
+            app:cardBackgroundColor="#E9ECEF">
+
+            <ImageView
+                android:id="@+id/item_image"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:scaleType="centerCrop"
+                android:contentDescription="Imagem do registro" />
+        </androidx.cardview.widget.CardView>
+
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:layout_marginTop="12dp"
-            android:background="#E0E0E0"/>
+            android:layout_marginTop="14dp"
+            android:background="#F1F3F5" />
 
-        <!-- RODAPÉ -->
         <TextView
             android:id="@+id/item_intensidade"
-            android:layout_marginTop="8dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
             android:text="Intensidade: 8"
+            android:textColor="#495057"
             android:textSize="13sp"
-            android:textColor="#666"/>
+            android:textStyle="bold" />
 
     </LinearLayout>
-
 </androidx.cardview.widget.CardView>

@@ -2,7 +2,6 @@ package com.ifpr.androidapptemplate.ui.home
 
 import android.Manifest
 import android.content.pm.PackageManager
-import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -12,22 +11,18 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import android.util.Base64
-import android.widget.*
+import android.widget.ImageView
+import android.widget.Toast
 import android.graphics.BitmapFactory
 import android.location.Geocoder
 import android.location.Location
 import android.os.Looper
 import androidx.core.app.ActivityCompat
-import androidx.appcompat.app.AppCompatDelegate
-import androidx.appcompat.widget.SwitchCompat
-import com.bumptech.glide.Glide
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationCallback
 import com.google.android.gms.location.LocationRequest
 import com.google.android.gms.location.LocationResult
 import com.google.android.gms.location.LocationServices
-import com.google.android.gms.location.Priority
-import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
@@ -46,8 +41,8 @@ import com.ifpr.androidapptemplate.ui.ai.AiLogicActivity
 class HomeFragment : Fragment() {
 
     private var _binding: FragmentHomeBinding? = null
+    private val binding get() = _binding!!
 
-    private lateinit var currentAddressTextView: TextView
     private lateinit var fusedLocationClient: FusedLocationProviderClient
     private lateinit var locationCallback: LocationCallback
     private lateinit var locationRequest: LocationRequest
@@ -56,31 +51,23 @@ class HomeFragment : Fragment() {
         private const val LOCATION_PERMISSION_REQUEST_CODE = 1
     }
 
-    // This property is only valid between onCreateView and
-    // onDestroyView.
-    private val binding get() = _binding!!
-
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        val view = inflater.inflate(R.layout.fragment_home, container, false)
+        _binding = FragmentHomeBinding.inflate(inflater, container, false)
+        val root: View = binding.root
 
-        inicializaGerenciamentoLocalizacao(view)
+        inicializaGerenciamentoLocalizacao()
+        carregarItensMarketplace(binding.itemContainer)
 
-        val container = view.findViewById<LinearLayout>(R.id.itemContainer)
-        carregarItensMarketplace(container)
-
-        val fab = view.findViewById<FloatingActionButton>(R.id.fab_ai)
-
-        fab.setOnClickListener {
-            val context = view.context
-            val intent = Intent(context, AiLogicActivity::class.java)
-            context.startActivity(intent)
+        binding.fabAi.setOnClickListener {
+            val intent = Intent(requireContext(), AiLogicActivity::class.java)
+            startActivity(intent)
         }
 
-        return view
+        return root
     }
 
     override fun onDestroyView() {
@@ -88,9 +75,7 @@ class HomeFragment : Fragment() {
         _binding = null
     }
 
-    private fun inicializaGerenciamentoLocalizacao(view: View) {
-        currentAddressTextView = view.findViewById(R.id.currentAddressTextView)
-
+    private fun inicializaGerenciamentoLocalizacao() {
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireActivity())
 
         if (ActivityCompat.checkSelfPermission(
@@ -127,9 +112,10 @@ class HomeFragment : Fragment() {
             if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 getCurrentLocation()
             } else {
+                binding.currentAddressTextView.text = "Permissão de localização negada."
                 Snackbar.make(
                     requireView(),
-                    "Permission denied. Cannot access location.",
+                    "Não foi possível acessar a localização.",
                     Snackbar.LENGTH_LONG
                 ).show()
             }
@@ -156,10 +142,10 @@ class HomeFragment : Fragment() {
             }
         }
 
+        // Criando a requisição atualizada para as bibliotecas mais recentes do Play Services
         locationRequest = LocationRequest.create().apply {
-            interval = 30000 // Intervalo em milissegundos para atualizacoes de localizacao
-            fastestInterval =
-                30000 // O menor intervalo de tempo para receber atualizacoes de localizacao
+            interval = 30000
+            fastestInterval = 30000
             priority = LocationRequest.PRIORITY_HIGH_ACCURACY
         }
 
@@ -171,18 +157,22 @@ class HomeFragment : Fragment() {
     }
 
     private fun displayAddress(location: Location) {
-        val geocoder = Geocoder(requireContext(), Locale.getDefault())
-        val addresses = geocoder.getFromLocation(location.latitude, location.longitude, 1)
-
         CoroutineScope(Dispatchers.IO).launch {
             try {
-                val address = addresses?.firstOrNull()?.getAddressLine(0) ?: "Address not found"
+                val geocoder = Geocoder(requireContext(), Locale.getDefault())
+                val addresses = geocoder.getFromLocation(location.latitude, location.longitude, 1)
+                val address = addresses?.firstOrNull()?.getAddressLine(0) ?: "Endereço não encontrado"
+
                 withContext(Dispatchers.Main) {
-                    currentAddressTextView.text = address
+                    if (_binding != null) {
+                        binding.currentAddressTextView.text = address
+                    }
                 }
             } catch (e: Exception) {
                 withContext(Dispatchers.Main) {
-                    currentAddressTextView.text = "Error: ${e.message}"
+                    if (_binding != null) {
+                        binding.currentAddressTextView.text = "Não foi possível carregar o endereço físico."
+                    }
                 }
             }
         }
@@ -192,8 +182,8 @@ class HomeFragment : Fragment() {
         val databaseRef = FirebaseDatabase.getInstance().getReference("itens")
 
         databaseRef.addListenerForSingleValueEvent(object : ValueEventListener {
-
             override fun onDataChange(snapshot: DataSnapshot) {
+                if (_binding == null) return
                 container.removeAllViews()
 
                 for (userSnapshot in snapshot.children) {
@@ -227,22 +217,16 @@ class HomeFragment : Fragment() {
                                 val bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.size)
                                 imageView.setImageBitmap(bitmap)
                             } catch (_: Exception) {
+                                imageView.setImageResource(android.R.drawable.ic_menu_gallery)
                             }
                         }
 
-                        // =========================================================
-                        // PASSO 5 – CAPTURAR O CLIQUE NO ITEM DA LISTA
-                        // =========================================================
                         itemView.setOnClickListener { view ->
-                            val context = view.context
-                            val intent = Intent(context, com.ifpr.androidapptemplate.DetalhesItemActivity::class.java)
-
-                            // MODIFIQUE ESSA LINHA: Em vez de item.id, use itemSnapshot.key
-                            intent.putExtra("ITEM_ID", itemSnapshot.key)
-
-                            context.startActivity(intent)
+                            val intent = Intent(view.context, com.ifpr.androidapptemplate.DetalhesItemActivity::class.java).apply {
+                                putExtra("ITEM_ID", itemSnapshot.key)
+                            }
+                            view.context.startActivity(intent)
                         }
-                        // =========================================================
 
                         container.addView(itemView)
                     }
@@ -250,8 +234,9 @@ class HomeFragment : Fragment() {
             }
 
             override fun onCancelled(error: DatabaseError) {
-                Toast.makeText(container.context, "Erro ao carregar dados", Toast.LENGTH_SHORT)
-                    .show()
+                if (context != null) {
+                    Toast.makeText(requireContext(), "Erro ao carregar dados", Toast.LENGTH_SHORT).show()
+                }
             }
         })
     }
